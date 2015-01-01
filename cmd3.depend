@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1420145435 source:d:\projects\cmd3\main.cpp
+	<iostream>
+	<string>
+	<cstdio>
+	<cstdlib>
+	<cstring>
+	<dlfcn.h>
+	"cmd3.h"
+
+1420139089 d:\projects\cmd3\cmd3.h
+	<string>
+	<ostream>
+
