@@ -174,7 +174,7 @@ int execute(command_s* command)
             std::cout<<dlerror()<<std::endl;
             return 0;
         }
-        plugin_ret_f to_connect = (plugin_ret_f) dlsym(handle,PLUGIN_SYMBOL_NAME_WITH_QUOTES);
+        plugin_ret_f to_connect = (plugin_ret_f) dlsym(handle,PLUGIN_SYMBOL_NAME3_WITH_QUOTES);
         if(to_connect == NULL)
         {
             std::cout<<dlerror()<<std::endl;

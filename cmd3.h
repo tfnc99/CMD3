@@ -6,8 +6,8 @@
 /** Define's
 *       These two are like defined rather than const so they can be used as funtion names.
 */
-#define PLUGIN_SYMBOL_NAME plug3
-#define PLUGIN_SYMBOL_NAME_WITH_QUOTES "plug3"
+#define PLUGIN_SYMBOL_NAME3 plug3
+#define PLUGIN_SYMBOL_NAME3_WITH_QUOTES "plug3"
 
 /** static const things
 *       These represent various buffer and size options, (and two quirky ones)

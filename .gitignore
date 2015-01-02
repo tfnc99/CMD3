@@ -11,6 +11,7 @@ tmp/
 *.bak
 *.swp
 *~.nib
+*.dll
 local.properties
 .classpath
 .settings/
