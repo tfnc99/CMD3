@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <cstdio>
 #include <cstdlib>
@@ -7,7 +8,7 @@
 #include <getopt.h>
 #include "cmd3.h"
 
-/** command_s* assemble(char* input)
+/** command_s* assemble(const char* input)
 *       Takes the input in form of a C string and makes a nice formatted command_s out of it.
 *   Arguments:
 *       char* input
@@ -168,6 +169,8 @@ int execute(command_s* command)
     *       Its all C so it shouldn't throw any exceptions but it casts the function pointer
     *       from dlsym() so it makes some assumptions (not that theres any other way to do it)
     *       so theres a tiny chance of a segfault.
+    *       After its verified it checks to see if there are any duplicate commands and prints
+    *       a waarning if there is.
     */
     else if(strncmp(command->command.c_str(),"load",COMMAND_BUFFER_SIZE) == 0)
     {
@@ -188,6 +191,19 @@ int execute(command_s* command)
         {
             std::cout<<"Invalid data returned from plugin"<<std::endl;
             return 0;
+        }
+        plugin_command_s* current = root;
+        plugin_command_s* currentp = plugin_com;
+        while(current != NULL)
+        {
+            currentp = plugin_com;
+            while(currentp != NULL)
+            {
+                if(currentp->command == current->command)
+                    std::cout<<"Warning: Duplicate command: `"<<currentp->command<<"' loaded"<<std::endl;
+                currentp = currentp->next;
+            }
+            current = current->next;
         }
         attach(plugin_com);
         return 0;
@@ -244,6 +260,7 @@ int main(int argc, char *argv[])
         case 'h':
             std::cout<<"Program Arguments:"<<std::endl;
             std::cout<<"-h: Prints this useless dialog"<<std::endl;
+            std::cout<<"-s: Surpress ALL output"<<std::endl;
             std::cout<<"-e [Command]: Executes command before program start"<<std::endl;
             std::cout<<"Internal Commands:"<<std::endl;
             exit(execute(assemble("help\0")));
