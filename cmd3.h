@@ -29,7 +29,7 @@ static const char PROMPT_CHAR = '>';
 struct command_s
 {
     std::string command;
-    std::string args[MAX_ARG_COUNT];
+    std::string args[MAX_ARG_COUNT + 1];
 };
 
 /** struct plugin_command_s

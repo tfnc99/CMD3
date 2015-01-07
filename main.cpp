@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <dlfcn.h>
+#include <getopt.h>
 #include "cmd3.h"
 
 /** command_s* assemble(char* input)
@@ -16,11 +17,11 @@
 *      *This function uses a lot of the flags in cmd3.h if a bufffer or arg count isnt big enough then
 *       go there rather than changing things in here.
 */
-command_s* assemble(char* input)
+command_s* assemble(const char* input)
 {
     std::string command;
     command.resize(COMMAND_BUFFER_SIZE);
-    std::string args[MAX_ARG_COUNT];
+    std::string args[MAX_ARG_COUNT + 1];
     command_s* returnie = new command_s;
     int input_iten = 0;
     int command_iten = 0;
@@ -29,8 +30,9 @@ command_s* assemble(char* input)
         command[command_iten] = tolower(input[input_iten]);
         command_iten++;
         input_iten++;
-    }while(input[input_iten] != '\n' && command_iten < COMMAND_BUFFER_SIZE && input_iten < INPUT_BUFFER_SIZE
-           && !isspace(input[input_iten]));
+    }
+    while(input[input_iten] != '\n' && command_iten < COMMAND_BUFFER_SIZE && input_iten < INPUT_BUFFER_SIZE
+            && !isspace(input[input_iten]));
     returnie->command = command;
     input_iten++;
     int arg_iten = 0;
@@ -39,6 +41,7 @@ command_s* assemble(char* input)
     *       It prevents arg_iten from being incremented if multiple spaces are between the arguments.
     */
     bool spacey = false;
+    args[MAX_ARG_COUNT] = input + input_iten;
     while(input[input_iten] != '\n' && input[input_iten] != '\0' && arg_iten < MAX_ARG_COUNT)
     {
         command_iten = 0;
@@ -57,7 +60,7 @@ command_s* assemble(char* input)
         }
         input_iten++;
     }
-    for(int i = 0; i < MAX_ARG_COUNT; i++)
+    for(int i = 0; i <= MAX_ARG_COUNT; i++)
         returnie->args[i] = args[i];
     return returnie;
 }
@@ -77,13 +80,13 @@ int verify(plugin_command_s* to_verify)
     plugin_command_s* current = to_verify;
     while(current != NULL)
     {
-         if(current->command.empty())
+        if(current->command.empty())
             return 1;
-         if(current->description.empty())
+        if(current->description.empty())
             return 1;
-         if(current->to_call == NULL)
+        if(current->to_call == NULL)
             return 1;
-         current = current->next;
+        current = current->next;
     }
     return 0;
 }
@@ -220,7 +223,8 @@ int execute(command_s* command)
 }
 
 /** int main(int argc, char *argv[])
-*       This loops forever, for(;;) style because that looks more techy than while(true), reseting input to all \0
+*       Main check for arguemtns before doing anything, -h exits right away.
+*       Then it loops forever, for(;;) style because that looks more techy than while(true), reseting input to all \0
 *       each time, using fgets to get a full line safely. The INPUT_BUFFER_SIZE const has one added to it each time
 *       its used in main to make sure theres a null terminating character.
 *       One the input's been gotten it is pummped through assemble, then execute, then deleteted to make room for the
@@ -232,20 +236,49 @@ int execute(command_s* command)
 */
 int main(int argc, char *argv[])
 {
-	char *input = new char[INPUT_BUFFER_SIZE + 1];
-	std::cout<<"TPro CMD3\nType 'HELP' to see avalible commands"<<std::endl;
-	for(;;)
-	{
-		for(int i = 0; i < INPUT_BUFFER_SIZE + 1; i++)
-			input[i] = '\0';
-		std::cout.put(PROMPT_CHAR);
-		fgets(input, INPUT_BUFFER_SIZE + 1, stdin);      //Gets input and appends a null character
-		if(input[0] == '\n')
-			continue;
+
+    int c = 0;
+    while((c = getopt (argc, argv, "he:")) != -1)
+        switch (c)
+        {
+        case 'h':
+            std::cout<<"Program Arguments:"<<std::endl;
+            std::cout<<"-h: Prints this useless dialog"<<std::endl;
+            std::cout<<"-e [Command]: Executes command before program start"<<std::endl;
+            std::cout<<"Internal Commands:"<<std::endl;
+            exit(execute(assemble("help\0")));
+            break;
+        case 'e':{
+            command_s* to_exec = assemble(optarg);
+            execute(to_exec);
+            delete to_exec;
+            break;}
+        case '?':
+            if (optopt == 'e')
+                std::cerr<<"Option -"<<optopt<<" requires an argument."<<std::endl;
+            else if (isprint (optopt))
+                std::cerr<<"Invalid option `-"<<optopt<<"'."<<std::endl;
+            else
+                std::cerr<<"Invalid character `"<<std::hex<<optopt<<"'."<<std::endl;
+            exit(0);
+        default:
+            abort();
+        }
+    /* Begin command line loop */
+    char *input = new char[INPUT_BUFFER_SIZE + 1];
+    std::cout<<"TPro CMD3\nType 'HELP' to see avalible commands"<<std::endl;
+    for(;;)
+    {
+        for(int i = 0; i < INPUT_BUFFER_SIZE + 1; i++)
+            input[i] = '\0';
+        std::cout.put(PROMPT_CHAR);
+        fgets(input, INPUT_BUFFER_SIZE + 1, stdin);      //Gets input and appends a null character
+        if(input[0] == '\n')
+            continue;
         command_s* command = assemble(input);
         execute(command);
         delete command;
     }
     delete [] input;
-	return 0;
+    return 0;
 }

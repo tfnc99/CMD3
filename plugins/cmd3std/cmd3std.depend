@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1420473145 source:d:\projects\cmd3\plugins\cmd3std\main.cpp
+	"cmd3.h"
+
+1420471868 d:\projects\cmd3\cmd3.h
+	<string>
+	<ostream>
+

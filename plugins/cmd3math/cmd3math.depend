@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1420164721 source:d:\projects\cmd3\plugins\cmd3math\main.cpp
+	"cmd3.h"
+	<cstring>
+	<cstdlib>
+	<cmath>
+
+1420471868 d:\projects\cmd3\cmd3.h
+	<string>
+	<ostream>
+
