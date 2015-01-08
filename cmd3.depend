@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1420696630 source:d:\projects\cmd3\main.cpp
+1420698354 source:d:\projects\cmd3\main.cpp
 	<iostream>
 	<fstream>
 	<string>
@@ -8,11 +8,9 @@
 	<cstring>
 	<dlfcn.h>
 	<getopt.h>
-	<unistd.h>
-	<sys/wait.h>
 	"cmd3.h"
 
-1420693596 d:\projects\cmd3\cmd3.h
+1420697997 d:\projects\cmd3\cmd3.h
 	<string>
 	<ostream>
 

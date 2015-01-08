@@ -10,7 +10,7 @@
 				<Option output="bin/Debug/cmd3std" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="3" />
-				<Option compiler="cygwin" />
+				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 				<Option createStaticLib="1" />
 				<Compiler>
@@ -22,13 +22,18 @@
 				<Option output="bin/Release/cmd3std" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="3" />
-				<Option compiler="cygwin" />
+				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 				<Option createStaticLib="1" />
 				<Compiler>
-					<Add option="-O2" />
+					<Add option="-Os" />
+					<Add option="-fno-rtti" />
+					<Add option="-fno-keep-inline-dllexport" />
 					<Add directory="D:/Projects/CMD3" />
 				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
