@@ -6,8 +6,6 @@
 #include <cstring>
 #include <dlfcn.h>
 #include <getopt.h>
-#include <unistd.h>
-#include <sys/wait.h>
 #include "cmd3.h"
 
 
