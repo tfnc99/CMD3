@@ -15,7 +15,6 @@
 *       INPUT_BUFFER_SIZE, otherwise its moot and justs wastes memory.
 *       PLUGINS ARE NOT ALLOWED TO CHANGE THESE NUMBERS
 */
-static const char CLEAR_SCREEN_COMMAND[] = "clear";
 static const int INPUT_BUFFER_SIZE = 1023;
 static const int COMMAND_BUFFER_SIZE = 64;
 static const int MAX_ARG_COUNT = 8;
@@ -25,6 +24,7 @@ static const char PROMPT_CHAR = '>';
 /** struct command_s
 *       This is what assemble returns, theres no point on it being in the API, but
 *       this seemed like the best place to put it. Members should be self explanitory.
+*       The last element in args is just everything after the command.
 */
 struct command_s
 {

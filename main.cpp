@@ -6,7 +6,10 @@
 #include <cstring>
 #include <dlfcn.h>
 #include <getopt.h>
+#include <unistd.h>
+#include <sys/wait.h>
 #include "cmd3.h"
+
 
 /** command_s* assemble(const char* input)
 *       Takes the input in form of a C string and makes a nice formatted command_s out of it.
@@ -143,7 +146,6 @@ int execute(command_s* command)
     if(strncmp(command->command.c_str(),"help",COMMAND_BUFFER_SIZE) == 0)
     {
         std::cout<<"HELP    [None]  :: Shows this useless dialog"<<std::endl;
-        std::cout<<"CLEAR   [None]  :: Clears the screen"<<std::endl;
         std::cout<<"LOAD  [Filename]:: Loads dynamic commands"<<std::endl;
         std::cout<<"EXIT   [Value]  :: Exits command line"<<std::endl;
         plugin_command_s* current = root;
@@ -154,14 +156,6 @@ int execute(command_s* command)
         }
         return 0;
     }
-    /** Command: CLEAR
-    *       Clears the screen, just calls system(). Cluttered screens make me mad.
-    */
-    else if(strncmp(command->command.c_str(),"clear",COMMAND_BUFFER_SIZE) == 0)
-    {
-        system(CLEAR_SCREEN_COMMAND);
-        return 0;
-    }
     /** Command: LOAD [FILENAME]
     *       The meat of the program. I couldn't figure out win32's HINSTANC_HTAG HUMBLIDIUM
     *       nonscense so I just installed cygwin and used the POSIX (I think its posix) stuff.
@@ -170,7 +164,7 @@ int execute(command_s* command)
     *       from dlsym() so it makes some assumptions (not that theres any other way to do it)
     *       so theres a tiny chance of a segfault.
     *       After its verified it checks to see if there are any duplicate commands and prints
-    *       a waarning if there is.
+    *       a warning if there is.
     */
     else if(strncmp(command->command.c_str(),"load",COMMAND_BUFFER_SIZE) == 0)
     {
@@ -260,16 +254,17 @@ int main(int argc, char *argv[])
         case 'h':
             std::cout<<"Program Arguments:"<<std::endl;
             std::cout<<"-h: Prints this useless dialog"<<std::endl;
-            std::cout<<"-s: Surpress ALL output"<<std::endl;
             std::cout<<"-e [Command]: Executes command before program start"<<std::endl;
             std::cout<<"Internal Commands:"<<std::endl;
             exit(execute(assemble("help\0")));
             break;
-        case 'e':{
+        case 'e':
+        {
             command_s* to_exec = assemble(optarg);
             execute(to_exec);
             delete to_exec;
-            break;}
+            break;
+        }
         case '?':
             if (optopt == 'e')
                 std::cerr<<"Option -"<<optopt<<" requires an argument."<<std::endl;

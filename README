@@ -1,0 +1,67 @@
+CMD3
+====
+
+Simple command line with a plugin interface.
+
+Command line arguments:
+    A command line with command line
+arguments! How funny! (not really because
+every other command line has them too but
+I found humor in that.)
+There are only two options:
+-h  -  Prints out a little dialog about
+        command line options and then
+        interally calls help.
+-e  -  Executes an interal command, this
+        still is run as long as it is
+        before -h (so you can see whats
+        in a plugin, etc.) usefull for
+        useing a batch file to load a
+        plugin before launch. If the
+        command contains any spaces put
+        it in quotes.
+
+Built in commands:
+    Ugh, theres a reason this is CMD3
+and not cmd1 or cmd2, the downfall of
+cmd1 was that it wasn't extensable, the
+downfall of cmd2 was that everything was
+object-oriented and dynamic and the load
+function had to be static but needed to
+access a member value and blah blah blah.
+CMD3 is the right balance of both. :)
+
+HELP:
+    This command prints out a description
+    of all the interal commands and then
+    steps through all the plugin commands.
+
+LOAD [Filename]:
+    Tries to load [Filename] as a plugin.
+
+EXIT [Number]:
+    Quits the program, you can optionally
+    specify a code to return, if nothing is
+    entered it defaults to 0.
+
+Copyright tfnc99 2015.
+Distributed under the BSD 3-Clause License
+(See accompanying file LICENSE or go to
+http://opensource.org/licenses/BSD-3-Clause)
+
+NOTICE
+This may be distrabuted with the cygwin1.dll
+which is licensed under the GNU GPLv3+, to
+retrive the source code for this please go
+to https://cygwin.com/ to retrive the
+source code!
+
+On Windows it will also require cyggcc_s-seh-1
+and cygstdc++-6, source code for this can also
+be retrived from https://cygwin.com/, these
+files, however are covered under the GCC
+Runtime Library Exception rather than the
+Cygwin Open Source Licensing Exception.
+
+(I'm no lawer so please tell me if theres a
+legal issue before sueing me! :D )

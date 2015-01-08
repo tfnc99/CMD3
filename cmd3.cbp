@@ -30,7 +30,7 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="LICENSE" />
-		<Unit filename="README.md" />
+		<Unit filename="README" />
 		<Unit filename="cmd3.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
