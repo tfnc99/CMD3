@@ -33,7 +33,7 @@ struct command_s
 };
 
 /** struct plugin_command_s
-*       This is what needes to be returned from the function returnedd from the plugin.
+*       This is what needes to be returned from the function returned from the plugin.
 *       The linked list can be as long as needed but nothing must be empty and IT MUST
 *       END WITH THE LAST NEXT BEING SET TO NULL. The members should be self-explanitory.
 *       std::string command should be all lower case!

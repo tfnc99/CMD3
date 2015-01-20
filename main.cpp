@@ -1,5 +1,4 @@
 #include <iostream>
-#include <fstream>
 #include <string>
 #include <cstdio>
 #include <cstdlib>
@@ -211,6 +210,7 @@ int execute(command_s* command)
         exit(strtol(command->args[0].c_str(),NULL,0));
         return 0;
     }
+
     /** Subsection: Plugins
     *       This is the part that steps through all of pluged in commands. If none exist then it
     *       just doesn't do anything. If control gets to the end of the function (execute, I mean)
@@ -244,7 +244,6 @@ int execute(command_s* command)
 */
 int main(int argc, char *argv[])
 {
-
     int c = 0;
     while((c = getopt (argc, argv, "he:")) != -1)
         switch (c)
@@ -276,7 +275,7 @@ int main(int argc, char *argv[])
         }
     /* Begin command line loop */
     char *input = new char[INPUT_BUFFER_SIZE + 1];
-    std::cout<<"TPro CMD3\nType 'HELP' to see avalible commands"<<std::endl;
+    std::cout<<"TPro CMD3\nCopyright (c) 2015 tfnc99\nType 'HELP' to see avalible commands"<<std::endl;
     for(;;)
     {
         for(int i = 0; i < INPUT_BUFFER_SIZE + 1; i++)

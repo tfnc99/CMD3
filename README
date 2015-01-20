@@ -3,6 +3,10 @@ CMD3
 
 Simple command line with a plugin interface.
 
+This was designed mostly to be used as an API
+for some little utilites I wanted to write,
+DO NOT ATTEMPT TO REPLACE A UNIX SHELL WITH THIS
+
 Command line arguments:
     A command line with command line
 arguments! How funny! (not really because
@@ -45,23 +49,17 @@ EXIT [Number]:
     entered it defaults to 0.
 
 Copyright tfnc99 2015.
-Distributed under the BSD 3-Clause License
+Distributed under the GNU GPL v3
 (See accompanying file LICENSE or go to
-http://opensource.org/licenses/BSD-3-Clause)
+http://www.gnu.org/licenses/gpl.html)
 
 NOTICE
 This may be distrabuted with the cygwin1.dll
-which is licensed under the GNU GPLv3+, to
+which is also licensed under the GNU GPLv3, to
 retrive the source code for this please go
 to https://cygwin.com/ to retrive the
 source code!
 
 On Windows it will also require cyggcc_s-seh-1
 and cygstdc++-6, source code for this can also
-be retrived from https://cygwin.com/, these
-files, however are covered under the GCC
-Runtime Library Exception rather than the
-Cygwin Open Source Licensing Exception.
-
-(I'm no lawer so please tell me if theres a
-legal issue before sueing me! :D )
+be retrived from https://cygwin.com/.

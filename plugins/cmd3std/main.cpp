@@ -1,4 +1,7 @@
 #include <cstdlib>
+#include <iostream>
+#include <exception>
+#include <fstream>
 #include "cmd3.h"
 
 /** Command: ECHO [Stuff]
@@ -6,7 +9,7 @@
 */
 int com_echo(std::string* args, std::ostream& printer)
 {
-    printer<<args[MAX_ARG_COUNT]; //The user pressing enter adds a newline for us
+    printer<<args[MAX_ARG_COUNT]; //The user pressing enter adds the space.
     return 0;
 }
 

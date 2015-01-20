@@ -1,9 +1,12 @@
 # depslib dependency file v1.0
-1420739344 source:d:\projects\cmd3\plugins\cmd3std\main.cpp
+1420845018 source:d:\projects\cmd3\plugins\cmd3std\main.cpp
 	<cstdlib>
+	<iostream>
+	<exception>
+	<fstream>
 	"cmd3.h"
 
-1420697997 d:\projects\cmd3\cmd3.h
+1420821855 d:\projects\cmd3\cmd3.h
 	<string>
 	<ostream>
 
