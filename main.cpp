@@ -1,15 +1,21 @@
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <dlfcn.h>
 #include <getopt.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 #include "cmd3.h"
 
 
-/** command_s* assemble(const char* input)
-*       Takes the input in form of a C string and makes a nice formatted command_s out of it.
+/** command_s* assemble(const char* input, int length)
+*       Takes the input in form of a C string and makes a nice formatted command_s out of it. It puts
+*       a blank string at the end.
 *   Arguments:
 *       char* input
 *           C string with a command and arguments seperated by spaces and newline and null terminated.
@@ -20,49 +26,19 @@
 */
 command_s* assemble(const char* input)
 {
-    std::string command;
-    command.resize(COMMAND_BUFFER_SIZE);
-    std::string args[MAX_ARG_COUNT + 1];
     command_s* returnie = new command_s;
-    int input_iten = 0;
-    int command_iten = 0;
-    do
+    std::stringstream parser;
+    parser<<input;
+    std::string buffer;
+    parser>>returnie->command;
+    while(parser.rdbuf()->in_avail() > 0)
     {
-        command[command_iten] = tolower(input[input_iten]);
-        command_iten++;
-        input_iten++;
+        parser>>buffer;
+        returnie->args.push_back(buffer);
+        buffer = "";
     }
-    while(input[input_iten] != '\n' && command_iten < COMMAND_BUFFER_SIZE && input_iten < INPUT_BUFFER_SIZE
-            && !isspace(input[input_iten]));
-    returnie->command = command;
-    input_iten++;
-    int arg_iten = 0;
-    /** Weird variable: bool spacey
-    *       This is used in an if statment after an argument is parsed to increment arg_iten.
-    *       It prevents arg_iten from being incremented if multiple spaces are between the arguments.
-    */
-    bool spacey = false;
-    args[MAX_ARG_COUNT] = input + input_iten;
-    while(input[input_iten] != '\n' && input[input_iten] != '\0' && arg_iten < MAX_ARG_COUNT)
-    {
-        command_iten = 0;
-        args[arg_iten].resize(ARG_BUFFER_SIZE);
-        while(!isspace(input[input_iten]) && input[input_iten] != '\0')
-        {
-            spacey = false;
-            args[arg_iten][command_iten] = input[input_iten];
-            command_iten++;
-            input_iten++;
-        }
-        if(isspace(input[input_iten]) && !spacey)
-        {
-            spacey = true;
-            arg_iten++;
-        }
-        input_iten++;
-    }
-    for(int i = 0; i <= MAX_ARG_COUNT; i++)
-        returnie->args[i] = args[i];
+    buffer = "";
+    returnie->args.push_back(buffer);
     return returnie;
 }
 
@@ -140,11 +116,12 @@ int execute(command_s* command)
     *       Prints a description of all avvalible commands. Prints the built in commands first
     *       the cycles through all the plugged in one.
     */
-    if(strncmp(command->command.c_str(),"help",COMMAND_BUFFER_SIZE) == 0)
+    if(command->command == "help")
     {
         std::cout<<"HELP    [None]  :: Shows this useless dialog"<<std::endl;
         std::cout<<"LOAD  [Filename]:: Loads dynamic commands"<<std::endl;
         std::cout<<"EXIT   [Value]  :: Exits command line"<<std::endl;
+        std::cout<<"CD   [Directory]:: Changes directory"<<std::endl;
         plugin_command_s* current = root;
         while(current != NULL)
         {
@@ -163,7 +140,7 @@ int execute(command_s* command)
     *       After its verified it checks to see if there are any duplicate commands and prints
     *       a warning if there is.
     */
-    else if(strncmp(command->command.c_str(),"load",COMMAND_BUFFER_SIZE) == 0)
+    else if(command->command == "load")
     {
         void* handle = dlopen(command->args[0].c_str(),RTLD_LAZY);
         if(handle == NULL)
@@ -205,12 +182,20 @@ int execute(command_s* command)
     *       think this is a different programming language. Its C++ with a lot of 'legacy' C stuff
     *       mixed in. This exits the program with an optional exit code.
     */
-    else if(strncmp(command->command.c_str(),"exit",COMMAND_BUFFER_SIZE) == 0)
+    else if(command->command == "exit")
     {
         exit(strtol(command->args[0].c_str(),NULL,0));
         return 0;
     }
-
+    /** Command: CD
+    *       Changes current working directoy.
+    */
+    else if(command->command == "cd")
+    {
+        if(chdir(command->args[0].c_str()))
+            std::cout<<"Error changing directory"<<std::endl;
+        return 0;
+    }
     /** Subsection: Plugins
     *       This is the part that steps through all of pluged in commands. If none exist then it
     *       just doesn't do anything. If control gets to the end of the function (execute, I mean)
@@ -219,7 +204,7 @@ int execute(command_s* command)
     plugin_command_s* current = root;
     while(current!=NULL)
     {
-        if(strncmp(command->command.c_str(),current->command.c_str(),current->command.length()) == 0)
+        if(command->command == current->command)
         {
             current->to_call(command->args,std::cout);
             return 0;
@@ -274,20 +259,23 @@ int main(int argc, char *argv[])
             abort();
         }
     /* Begin command line loop */
-    char *input = new char[INPUT_BUFFER_SIZE + 1];
+    char* input = NULL;
+    history_max_entries = 0;
+    using_history();
+    std::string prompt_base = ">";
     std::cout<<"TPro CMD3\nCopyright (c) 2015 tfnc99\nType 'HELP' to see avalible commands"<<std::endl;
     for(;;)
     {
-        for(int i = 0; i < INPUT_BUFFER_SIZE + 1; i++)
-            input[i] = '\0';
-        std::cout.put(PROMPT_CHAR);
-        fgets(input, INPUT_BUFFER_SIZE + 1, stdin);      //Gets input and appends a null character
-        if(input[0] == '\n')
+        input = readline((get_current_dir_name() + prompt_base).c_str());
+        if(input[0] == '\n' || isspace(input[0]) || input[0] == '\0'){
+            free(input);
             continue;
+        }
+        add_history(input);
         command_s* command = assemble(input);
+        free(input);
         execute(command);
         delete command;
     }
-    delete [] input;
     return 0;
 }

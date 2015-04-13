@@ -2,6 +2,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <cmath>
+#include <gmp.h>
 
 /** com_sin, com_cos, com_tan
 *       These the functions are exactly the same but with sin, cos, tan.
@@ -46,7 +47,14 @@ int com_tan(std::string* args, std::ostream& printer)
     return 0;
 }
 
-
+com_base_conv(std::string* args, std::ostream& printer)
+{
+    int flag = 0;
+    mpz_t number;
+    mpz_init(number);
+    mpz_set_ui(number,0);
+    flag = mpz_set_str(number,args[0].c_str(),strtol(args[1].c_str(),))
+}
 
 extern "C"
 {

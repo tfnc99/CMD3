@@ -1,6 +1,7 @@
 #ifndef PLUGINS_H_INCLUDED
 #define PLUGINS_H_INCLUDED
 #include <string>
+#include <vector>
 #include <ostream>
 
 /** Define's
@@ -8,18 +9,6 @@
 */
 #define PLUGIN_SYMBOL_NAME3 plug3
 #define PLUGIN_SYMBOL_NAME3_WITH_QUOTES "plug3"
-
-/** static const things
-*       These represent various buffer and size options, (and two quirky ones)
-*       Make sure that if COMMAND_BUFFER_SIZE or ARG_BUFFER_SIZE are smaller than
-*       INPUT_BUFFER_SIZE, otherwise its moot and justs wastes memory.
-*       PLUGINS ARE NOT ALLOWED TO CHANGE THESE NUMBERS
-*/
-static const int INPUT_BUFFER_SIZE = 1023;
-static const int COMMAND_BUFFER_SIZE = 64;
-static const int MAX_ARG_COUNT = 8;
-static const int ARG_BUFFER_SIZE = (INPUT_BUFFER_SIZE - COMMAND_BUFFER_SIZE) / MAX_ARG_COUNT;
-static const char PROMPT_CHAR = '>';
 
 /** struct command_s
 *       This is what assemble returns, theres no point on it being in the API, but
@@ -29,7 +18,7 @@ static const char PROMPT_CHAR = '>';
 struct command_s
 {
     std::string command;
-    std::string args[MAX_ARG_COUNT + 1];
+    std::vector<std::string> args;
 };
 
 /** struct plugin_command_s
@@ -42,7 +31,7 @@ struct plugin_command_s
 {
     std::string command;
     std::string description;
-    int(*to_call)(std::string*,std::ostream&);
+    int(*to_call)(std::vector<std::string>,std::ostream&);
     plugin_command_s* next;
 };
 

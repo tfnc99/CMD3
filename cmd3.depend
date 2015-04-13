@@ -1,17 +1,21 @@
 # depslib dependency file v1.0
-1421769262 source:d:\projects\cmd3\main.cpp
+1428946572 source:d:\projects\cmd3\main.cpp
 	<iostream>
 	<string>
+	<sstream>
 	<cstdio>
 	<cstdlib>
 	<cstring>
 	<dlfcn.h>
 	<getopt.h>
+	<unistd.h>
+	<sys/wait.h>
 	<readline/readline.h>
 	<readline/history.h>
 	"cmd3.h"
 
-1420821855 d:\projects\cmd3\cmd3.h
+1428689116 d:\projects\cmd3\cmd3.h
 	<string>
+	<vector>
 	<ostream>
 
